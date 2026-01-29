@@ -1,33 +1,83 @@
-# ⚙️ Technical Specifications: Family-First Matrimony
+# ⚙️ System Specification – Family-First Matrimony Platform
 
-This document outlines the technical architecture, database schema, and security protocols for the Family-First Matrimony application.
-
-## 1. Technology Stack
-We are using a **Backend-Heavy** approach to ensure security, scalability, and strict data validation.
-
-| Layer | Technology | Description |
-| :--- | :--- | :--- |
-| **Runtime Environment** | **Node.js** | Non-blocking I/O for handling concurrent requests. |
-| **Framework** | **Express.js** | Implements REST API with MVC Architecture. |
-| **Database** | **MongoDB** | NoSQL database for flexible yet structured profile data. |
-| **ORM/ODM** | **Mongoose** | Strictly enforces Schema validation (Age, Enums). |
-| **Authentication** | **JWT (JSON Web Token)** | Stateless authentication for secure sessions. |
-| **Task Scheduling** | **Node-Cron** | Executes the "Auto-Termination" logic nightly. |
-| **File Storage** | **AWS S3 / Cloudinary** | Secure storage for ID proofs and profile photos. |
+## 1. User Authentication
+- JWT-based authentication
+- Role-based access (User, Family, Admin)
+- Secure password hashing
 
 ---
 
-## 2. Project Architecture (MVC Pattern)
-The project follows a clean **Model-View-Controller** separation.
+## 2. Profile Specification
 
-```text
-matrimony-backend/
-│
-├── config/             # Database connection & Environment variables
-├── controllers/        # Business logic (handle requests, send responses)
-├── models/             # Database Schemas (Data strictness lives here)
-├── routes/             # API Endpoints definition
-├── middlewares/        # Security checks (Auth, Verification, Admin)
-├── utils/              # Helper functions (Cron Jobs, Email Services)
-├── validations/        # Joi/Zod validation schemas
-└── server.js           # Application entry point
+### Profile Fields
+- Name
+- Date of Birth
+- Gender
+- Education
+- Occupation
+- Location
+
+Each user can have only one profile.
+
+---
+
+## 3. Document Specification
+
+### Supported Documents
+- Aadhaar Card (mandatory)
+- Caste Certificate (mandatory)
+
+### Rules
+- Documents must be approved by admin
+- Unverified documents block profile visibility
+
+---
+
+## 4. Photo Specification
+
+- Multiple photo uploads allowed
+- Photos remain locked until admin approval
+- Women photos are private by default
+
+---
+
+## 5. Caste Verification Logic
+
+- One verified caste per profile
+- Same-caste visibility enforced at query level
+- Unverified caste profiles are excluded from search results
+
+---
+
+## 6. Matchmaking Rules
+
+- Profiles visible only after full verification
+- Families initiate and accept connections
+- Communication enabled only after mutual approval
+
+---
+
+## 7. Admin Specification
+
+### Admin Capabilities
+- View pending verifications
+- Approve or reject documents
+- Lock or unlock profile visibility
+- Moderate profiles
+
+---
+
+## 8. Security Specifications
+
+- Encrypted Aadhaar storage
+- Secure file storage (AWS S3)
+- Role-based API protection
+- Audit logging for admin actions
+
+---
+
+## 9. System Constraints
+
+- No direct interaction between men and women
+- No access to profiles without verification
+- No matchmaking outside defined caste rules
